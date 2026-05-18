@@ -1,0 +1,12 @@
+Tautan ke Docker Hub:
+https://hub.docker.com/r/ardiradi/wine-quality-mlops
+
+Petunjuk:
+1. Buat akun Docker Hub di https://hub.docker.com
+2. Build Docker image:
+   mlflow models build-docker -m "runs:/<run_id>/model" -n "wine-quality-mlops"
+3. Tag dan push ke Docker Hub:
+   docker tag wine-quality-mlops <username>/wine-quality-mlops:latest
+   docker push <username>/wine-quality-mlops:latest
+
+Catatan: Ganti <username> dengan username Docker Hub Anda dan <run_id> dengan MLflow run ID.
