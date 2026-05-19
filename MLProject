@@ -1,6 +1,5 @@
 name: Heart_Disease_MLOps
-docker_env:
-  image: mlflow-heart-disease
+conda_env: conda.yaml
 
 entry_points:
   main:
