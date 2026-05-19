@@ -29,13 +29,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install mlflow==2.19.0 scikit-learn pandas numpy matplotlib seaborn joblib
       
-      - name: Run MLflow Training
+      - name: Run MLflow Project
         run: |
-          python modelling.py \
-            --n_estimators 200 \
-            --max_depth 10 \
-            --min_samples_split 5 \
-            --min_samples_leaf 2
+          mlflow run . --env-manager=local \
+            -P n_estimators=200 \
+            -P max_depth=10 \
+            -P min_samples_split=5 \
+            -P min_samples_leaf=2
       
       - name: Upload Model Artifacts
         uses: actions/upload-artifact@v4
