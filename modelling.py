@@ -42,11 +42,17 @@ def load_preprocessed_data(data_dir='heart_disease_preprocessing'):
 def train_model(n_estimators, max_depth, min_samples_split, min_samples_leaf):
     """Melatih model dan melakukan logging ke MLflow."""
     
-    mlflow.set_experiment("Heart_Disease_CI")
+    # Jika dijalankan via mlflow run, experiment sudah di-set otomatis
+    # Jika dijalankan standalone, set experiment secara manual
+    active_run = mlflow.active_run()
+    if active_run is None:
+        mlflow.set_experiment("Heart_Disease_CI")
     
     X_train, X_val, X_test, y_train, y_val, y_test = load_preprocessed_data()
     
-    with mlflow.start_run(run_name="RF_CI_Pipeline"):
+    # Gunakan active run dari mlflow run jika ada, atau buat baru
+    run_context = mlflow.start_run(run_name="RF_CI_Pipeline") if active_run is None else mlflow.start_run(run_id=active_run.info.run_id)
+    with run_context:
         # Log parameters
         mlflow.log_param("n_estimators", n_estimators)
         mlflow.log_param("max_depth", max_depth)
