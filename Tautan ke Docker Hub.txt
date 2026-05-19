@@ -1,0 +1,13 @@
+Tautan ke Docker Hub
+====================
+https://hub.docker.com/r/ardiradi/heart-disease-mlops
+
+Cara build dan push Docker image:
+1. Build menggunakan MLflow:
+   mlflow models build-docker -m "runs:/<run_id>/model" -n "heart-disease-mlops"
+
+2. Tag image:
+   docker tag heart-disease-mlops <username>/heart-disease-mlops:latest
+
+3. Push ke Docker Hub:
+   docker push <username>/heart-disease-mlops:latest

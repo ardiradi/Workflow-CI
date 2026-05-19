@@ -1,6 +1,6 @@
-name: Wine_Quality_MLOps
+name: Heart_Disease_MLOps
 docker_env:
-  image: mlflow-wine-quality
+  image: mlflow-heart-disease
 
 entry_points:
   main:

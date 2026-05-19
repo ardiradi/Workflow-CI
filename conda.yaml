@@ -1,4 +1,4 @@
-name: wine_quality_mlops
+name: heart_disease_mlops
 channels:
   - defaults
   - conda-forge

@@ -2,6 +2,9 @@
 modelling.py (MLProject Version)
 Model Training Script untuk dijalankan di dalam MLflow Project / CI Pipeline.
 
+Dataset: Heart Disease (Cleveland) - UCI ML Repository
+Target: Binary classification (0 = no disease, 1 = disease)
+
 Author: ardir
 """
 
@@ -25,7 +28,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-def load_preprocessed_data(data_dir='wine_quality_preprocessing'):
+def load_preprocessed_data(data_dir='heart_disease_preprocessing'):
     """Memuat data yang sudah dipreproses."""
     X_train = pd.read_csv(os.path.join(data_dir, 'X_train.csv'))
     X_val = pd.read_csv(os.path.join(data_dir, 'X_val.csv'))
@@ -39,7 +42,7 @@ def load_preprocessed_data(data_dir='wine_quality_preprocessing'):
 def train_model(n_estimators, max_depth, min_samples_split, min_samples_leaf):
     """Melatih model dan melakukan logging ke MLflow."""
     
-    mlflow.set_experiment("Wine_Quality_CI")
+    mlflow.set_experiment("Heart_Disease_CI")
     
     X_train, X_val, X_test, y_train, y_val, y_test = load_preprocessed_data()
     
@@ -80,7 +83,9 @@ def train_model(n_estimators, max_depth, min_samples_split, min_samples_leaf):
         os.makedirs("artifacts", exist_ok=True)
         cm = confusion_matrix(y_test, y_pred_test)
         plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=['no_disease', 'disease'],
+                    yticklabels=['no_disease', 'disease'])
         plt.title('Confusion Matrix')
         plt.xlabel('Predicted')
         plt.ylabel('Actual')
@@ -108,7 +113,7 @@ def train_model(n_estimators, max_depth, min_samples_split, min_samples_leaf):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Wine Quality Model Training')
+    parser = argparse.ArgumentParser(description='Heart Disease Model Training')
     parser.add_argument('--n_estimators', type=int, default=200)
     parser.add_argument('--max_depth', type=int, default=10)
     parser.add_argument('--min_samples_split', type=int, default=5)

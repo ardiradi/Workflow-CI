@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/wine-quality-mlops
+  DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/heart-disease-mlops
 
 jobs:
   train:
