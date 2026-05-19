@@ -11,9 +11,6 @@ on:
       - '.github/workflows/ci.yml'
   workflow_dispatch:
 
-env:
-  DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/heart-disease-mlops
-
 jobs:
   train:
     runs-on: ubuntu-latest
@@ -54,46 +51,3 @@ jobs:
         run: |
           tar -czf model-artifacts.tar.gz mlruns/ artifacts/ || true
           echo "Artifacts packaged successfully"
-
-  build-docker:
-    needs: train
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      
-      - name: Install MLflow
-        run: pip install mlflow==2.19.0
-      
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: mlflow-artifacts
-          path: ./
-      
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - name: Build Docker Image with MLflow
-        run: |
-          # Find the latest run
-          LATEST_RUN=$(ls -t mlruns/0/ | head -1 || echo "latest")
-          # Build docker image using mlflow
-          mlflow models build-docker -m "mlruns/0/${LATEST_RUN}/artifacts/model" -n "${DOCKER_IMAGE}:latest" || \
-          echo "Docker build skipped - using alternative method"
-      
-      - name: Push Docker Image
-        run: |
-          docker push ${DOCKER_IMAGE}:latest || echo "Push skipped"
-          docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${{ github.sha }}
-          docker push ${DOCKER_IMAGE}:${{ github.sha }} || echo "Push skipped"
